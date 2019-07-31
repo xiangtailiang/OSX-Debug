@@ -9,7 +9,7 @@
 # Declare variables to be used in this script
 scriptVersion=4.3.3
 homeDir="$(echo $HOME)"
-scriptDir="$homeDir/Library/debugNk"
+scriptDir="$homeDir/OSX-Debug"
 dbgURL="https://raw.githubusercontent.com/black-dragon74/OSX-Debug/master/gen_debug.sh"
 efiScript="$scriptDir/mount_efi.sh"
 pledit=/usr/libexec/PlistBuddy
@@ -33,6 +33,7 @@ hasChamel=""
 hasClover=""
 epochFor1Day=86400
 veriStat=""
+testURL="baidu.com"
 
 # Variables used in dumpIOREG (Dynamic Approach)
 IODelayAfterQuit=1 # Delay after quitting IOReg
@@ -690,48 +691,48 @@ dsdtAgeVerified="false";
 bootAgeVerified="false";
 if [[ -e "$efiloc/EFI/CLOVER" ]]; then
 	# Check for DSDT in origin folder
-	if [[ ! -e "$efiloc/EFI/CLOVER/ACPI/origin/DSDT.aml" ]]; then
-		echo -e "\033[31mYou forgot to press F4 or Fn+F4 at clover boot screen.\033[0m"
-		echo -e "\033[31mPlease reboot and press F4 or Fn+F4 to dump ACPI origin files.\033[0m"
-		rm -rf $outDir
-		echo -e "Unmounted $efiloc"
-		diskutil unmount $efiloc &>/dev/null
-		exit 1
-	elif [[ ! -e "$efiloc/EFI/CLOVER/misc/preboot.log" ]]; then
-		echo -e "\033[31mYou forgot to press F2 or Fn+F2 at clover boot screen.\033[0m"
-		echo -e "\033[31mPlease reboot and press F2 or Fn+F2 to dump preboot log.\033[0m"
-		rm -rf $outDir
-		echo -e "Unmounted $efiloc"
-		diskutil unmount $efiloc &>/dev/null
-		exit 1
-	else
-		# Verify that ACPI origin files are not older than 1 day.
-		verifyModDate "$efiloc/EFI/CLOVER/ACPI/origin/DSDT.aml"
-		if [[ $veriStat == "false" ]]; then
-			echo -e "\033[31mACPI files were dumped more than 1 day ago!\033[0m"
-			echo -e "\033[31mReboot and press F4 or Fn+F4 at CLOVER boot screen to dump new files.\033[0m"
-		else
-			echo "ACPI files were dumped recently. Great!"
-			dsdtAgeVerified="true";
-		fi
+	# if [[ ! -e "$efiloc/EFI/CLOVER/ACPI/origin/DSDT.aml" ]]; then
+	# 	echo -e "\033[31mYou forgot to press F4 or Fn+F4 at clover boot screen.\033[0m"
+	# 	echo -e "\033[31mPlease reboot and press F4 or Fn+F4 to dump ACPI origin files.\033[0m"
+	# 	rm -rf $outDir
+	# 	echo -e "Unmounted $efiloc"
+	# 	diskutil unmount $efiloc &>/dev/null
+	# 	exit 1
+	# elif [[ ! -e "$efiloc/EFI/CLOVER/misc/preboot.log" ]]; then
+	# 	echo -e "\033[31mYou forgot to press F2 or Fn+F2 at clover boot screen.\033[0m"
+	# 	echo -e "\033[31mPlease reboot and press F2 or Fn+F2 to dump preboot log.\033[0m"
+	# 	rm -rf $outDir
+	# 	echo -e "Unmounted $efiloc"
+	# 	diskutil unmount $efiloc &>/dev/null
+	# 	exit 1
+	# else
+	# 	# Verify that ACPI origin files are not older than 1 day.
+	# 	verifyModDate "$efiloc/EFI/CLOVER/ACPI/origin/DSDT.aml"
+	# 	if [[ $veriStat == "false" ]]; then
+	# 		echo -e "\033[31mACPI files were dumped more than 1 day ago!\033[0m"
+	# 		echo -e "\033[31mReboot and press F4 or Fn+F4 at CLOVER boot screen to dump new files.\033[0m"
+	# 	else
+	# 		echo "ACPI files were dumped recently. Great!"
+	# 		dsdtAgeVerified="true";
+	# 	fi
 
-		# Verify that preboot log is not older than 1 day
-		verifyModDate "$efiloc/EFI/CLOVER/misc/preboot.log"
-		if [[ $veriStat == "false" ]]; then
-			echo -e "\033[31mPreboot log was dumped more than 1 day ago!\033[0m"
-			echo -e "\033[31mReboot and press F2 or Fn+F2 at CLOVER boot screen to dump new log.\033[0m"
-		else
-			echo "Preboot log was dumped recently. Great!"
-			bootAgeVerified="true"; 
-		fi
-	fi
+	# 	# Verify that preboot log is not older than 1 day
+	# 	verifyModDate "$efiloc/EFI/CLOVER/misc/preboot.log"
+	# 	if [[ $veriStat == "false" ]]; then
+	# 		echo -e "\033[31mPreboot log was dumped more than 1 day ago!\033[0m"
+	# 		echo -e "\033[31mReboot and press F2 or Fn+F2 at CLOVER boot screen to dump new log.\033[0m"
+	# 	else
+	# 		echo "Preboot log was dumped recently. Great!"
+	# 		bootAgeVerified="true"; 
+	# 	fi
+	# fi
 
-	if [[ $dsdtAgeVerified == "false" || $bootAgeVerified == "false" ]]; then
-		rm -rf $outDir
-		echo -e "Unmounted $efiloc"
-		diskutil unmount $efiloc &>/dev/null
-		exit 1
-	fi
+	# if [[ $dsdtAgeVerified == "false" || $bootAgeVerified == "false" ]]; then
+	# 	rm -rf $outDir
+	# 	echo -e "Unmounted $efiloc"
+	# 	diskutil unmount $efiloc &>/dev/null
+	# 	exit 1
+	# fi
 
 	echo "All checks passed. Copying CLOVER files..."
 	cp -prf "$efiloc/EFI/CLOVER" .
